@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TeamSketch.ViewModels"
-		xmlns:controls="using:TeamSketch.UserControls"
+				xmlns:controls="using:TeamSketch.UserControls"
         x:Class="TeamSketch.Views.MainWindow"
         Title="Team Sketch">
 
@@ -15,15 +15,19 @@
 			<Setter Property="SizeToContent" Value="WidthAndHeight" />
 			<Setter Property="FontFamily" Value="{StaticResource MainFontFamily}" />
 			<Setter Property="FontSize" Value="16" />
-		</Style>
+			<Setter Property="CanResize" Value="False" />
+			<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+			<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome" />
+			<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="0" />
+			<Setter Property="WindowState" Value="FullScreen" />
+			<Setter Property="HasSystemDecorations" Value="False" />
+    </Style>
 
 		<Style Selector="Border.canvasContainer">
 			<Setter Property="Background" Value="#f5f5f5" />
 		</Style>
 		<Style Selector="Canvas">
 			<Setter Property="Background" Value="White" />
-			<Setter Property="Width" Value="1280" />
-			<Setter Property="Height" Value="720" />
 		</Style>
 		<Style Selector="Canvas:disabled">
 			<Setter Property="Opacity" Value="0.4" />
@@ -86,46 +90,72 @@
 		</Style>
 	</Window.Styles>
 
-	<Grid RowDefinitions="*,60">
-		<Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-
-			<Border Grid.Column="0" Classes="canvasContainer">
-				<Canvas Name="canvas" DataContext="{Binding Path=ConnectionStatus}" IsEnabled="{Binding Connected}" PointerPressed="Canvas_PointerPressed" PointerReleased="Canvas_PointerReleased" />
-			</Border>
-
-			<Border Grid.Column="1">
-				<Grid RowDefinitions="Auto,1*,210">
-					<Border Grid.Row="0" Classes="toolsPanel">
-						<controls:ToolsPanel DataContext="{Binding ToolsPanel}" />
-					</Border>
-
-					<Border Grid.Row="1" Classes="participantsPanel">
-						<controls:ParticipantsPanel DataContext="{Binding ParticipantsPanel}" />
-					</Border>
-
-					<Border Grid.Row="2" Classes="eventsPanel">
-						<controls:EventsPanel DataContext="{Binding EventsPanel}" />
-					</Border>
-				</Grid>
-			</Border>
-			
+	<Grid RowDefinitions="*">
+		<Grid Grid.Row="0" ColumnDefinitions="*">
+      <Border Name="containerBorder" Grid.Column="0" Classes="canvasContainer">
+        <Canvas
+          Name="canvas"
+          DataContext="{Binding Path=ConnectionStatus}"
+          PointerPressed="Canvas_PointerPressed"
+          PointerReleased="Canvas_PointerReleased"/>
+        <!--<Line
+          x:Name="VerticalLine" Width="1" Height="{Binding ElementName=canvas, Path=Height}"
+          Stroke="Gray"/>-->
+        <!--<Path x:Name="HorizontalLine" Height="1" Width="{Binding ElementName=canvas, Path=Width}"/>-->
+        <!--<Path Name="HorizontalLine" Height="1" Width="1028"/>-->
+        <Border.ContextMenu>
+          <ContextMenu
+            Name="PropertiesSaveContextMenu"
+            PlacementMode="Pointer"
+            IsEnabled="True">
+            <MenuItem
+              Header="Undo			Ctrl+Z"
+              HotKey="Ctrl+Z"
+              Command="{Binding UndoCommand}"
+              IsEnabled="{Binding UndoEnabled}">
+            </MenuItem>
+            <MenuItem
+							Header="Redo			Ctrl+Y"
+              HotKey="Ctrl+Y"
+              Command="{Binding RedoCommand}"
+              IsEnabled="{Binding RedoEnabled}">
+            </MenuItem>
+            <Separator/>
+            <MenuItem
+              Header="New			Ctrl+N"
+              HotKey="Ctrl+N"
+              Command="{Binding NewCommand}">
+            </MenuItem>
+            <MenuItem
+              Header="Open			Ctrl+O"
+              HotKey="Ctrl+O"
+              Command="{Binding OpenCommand}">
+            </MenuItem>
+            <MenuItem
+              Header="Save			Ctrl+S"
+              HotKey="Ctrl+S"
+              Command="{Binding SaveCommand}"
+              IsEnabled="{Binding SaveEnabled}">
+            </MenuItem>
+            <MenuItem
+              Header="Save As..."
+              Command="{Binding SaveAsCommand}"
+              IsEnabled="{Binding SaveAsEnabled}">
+            </MenuItem>
+            <Separator/>
+            <MenuItem
+              Header="Quit			Alt+F4"
+              HotKey="Alt+F4"
+              Command="{Binding QuitCommand}">
+            </MenuItem>
+          </ContextMenu>
+        </Border.ContextMenu>
+      </Border>
+      <Line
+          x:Name="VerticalLine" Width="1" Height="{Binding ElementName=canvas, Path=Height}"
+          Stroke="Gray"/>
+      <Path x:Name="HorizontalLine" Height="1" Width="{Binding ElementName=canvas, Path=Width}"/>
 		</Grid>
-		
-		<Border Grid.Row="1" Classes="footer">
-
-			<DockPanel>
-				<Border Classes="roomNameSection">
-					<DockPanel>
-						<TextBlock Text="Room: " />
-						<TextBlock Text="{Binding Room}" Classes="roomName" />
-						<Button Command="{Binding CopyRoom}">Copy</Button>
-					</DockPanel>
-				</Border>
-
-				<controls:ConnectionStatus DataContext="{Binding ConnectionStatus}" />
-			</DockPanel>
-			
-		</Border>
 	</Grid>
 
 </Window>

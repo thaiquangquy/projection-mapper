@@ -2,8 +2,8 @@
 
 public static class Globals
 {
-    public const int CanvasWidth = 1280;
-    public const int CanvasHeight = 720;
+    public static double CanvasWidth = 1280;
+    public static double CanvasHeight = 720;
 
 #if DEBUG
     public const string ServerUri = "http://localhost:5150";

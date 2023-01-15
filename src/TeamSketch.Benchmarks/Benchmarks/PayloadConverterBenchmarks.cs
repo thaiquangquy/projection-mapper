@@ -15,8 +15,8 @@ namespace TeamSketch.Benchmarks
 
         public PayloadConverterPointBenchmarks()
         {
-            x1 = _random.Next(0, Globals.CanvasWidth);
-            y1 = _random.Next(0, Globals.CanvasHeight);
+            x1 = _random.Next(0, (int) Globals.CanvasWidth);
+            y1 = _random.Next(0, (int) Globals.CanvasHeight);
         }
 
         [Benchmark]
@@ -34,8 +34,8 @@ namespace TeamSketch.Benchmarks
         {
             for (int i = 0; i < _linePoints.Count; i++)
             {
-                var x = _random.Next(0, Globals.CanvasWidth);
-                var y = _random.Next(0, Globals.CanvasHeight);
+                var x = _random.Next(0, (int) Globals.CanvasWidth);
+                var y = _random.Next(0, (int) Globals.CanvasHeight);
                 _linePoints[i] = new Point(x, y);
             }
         }

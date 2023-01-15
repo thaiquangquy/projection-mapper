@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using TeamSketch.Services;
 using TeamSketch.ViewModels;
 using TeamSketch.Views;
 
@@ -19,14 +20,22 @@ public class App : Application
         {
             desktopLifetime.Startup += Startup;
 
-            var window = new LobbyWindow
+            //var window = new LobbyWindow
+            //{
+            //    DataContext = new LobbyViewModel(),
+            //    Topmost = true,
+            //    CanResize = false
+            //};
+            //window.Show();
+            //window.Activate();
+
+            SignalRService signalRService = new SignalRService(new AppState());
+            var mainWindow = new MainWindow
             {
-                DataContext = new LobbyViewModel(),
-                Topmost = true,
-                CanResize = false
+                DataContext = new MainWindowViewModel(signalRService)
             };
-            window.Show();
-            window.Activate();
+            mainWindow.Show();
+            mainWindow.Activate();
         }
 
         base.OnFrameworkInitializationCompleted();
