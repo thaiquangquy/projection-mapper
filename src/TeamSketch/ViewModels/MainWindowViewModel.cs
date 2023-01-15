@@ -11,13 +11,11 @@ using ReactiveUI;
 using Splat;
 using TeamSketch.DependencyInjection;
 using TeamSketch.Services;
-using TeamSketch.ViewModels.UserControls;
 
 namespace TeamSketch.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    private readonly IAppState _appState;
     public ReactiveCommand<Unit, Unit> UndoCommand { get; }
     public ReactiveCommand<Unit, Unit> RedoCommand { get; }
     public ReactiveCommand<Unit, Unit> NewCommand { get; }
@@ -25,8 +23,7 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveAsCommand { get; }
     public ReactiveCommand<Unit, Unit> QuitCommand { get; }
-    //public ReactiveCommand<Unit, Unit> Command { get; }
-    //public ReactiveCommand<string, Unit> Command { get; }
+
     public event Action RequestUndo;
     public event Action RequestRedo;
     public event Action RequestNewFile;
@@ -35,13 +32,8 @@ public class MainWindowViewModel : ViewModelBase
     public event Action<bool> RequestSave;
     private string ImageFileName;
 
-    public MainWindowViewModel(ISignalRService signalRService)
+    public MainWindowViewModel()
     {
-        _appState = Locator.Current.GetRequiredService<IAppState>();
-        SignalRService = signalRService;
-
-        toolsPanel = new ToolsPanelViewModel(_appState.BrushSettings);
-
         UndoCommand = ReactiveCommand.Create(Undo);
         RedoCommand = ReactiveCommand.Create(Redo);
         NewCommand = ReactiveCommand.Create(New);
@@ -78,37 +70,6 @@ public class MainWindowViewModel : ViewModelBase
     public void Quit()
     {
         RequestClose();
-    }
-
-    public ISignalRService SignalRService { get; }
-
-
-    private ToolsPanelViewModel toolsPanel;
-    private ToolsPanelViewModel ToolsPanel
-    {
-        get => toolsPanel;
-        set => this.RaiseAndSetIfChanged(ref toolsPanel, value);
-    }
-
-    private ParticipantsPanelViewModel participantsPanel;
-    private ParticipantsPanelViewModel ParticipantsPanel
-    {
-        get => participantsPanel;
-        set => this.RaiseAndSetIfChanged(ref participantsPanel, value);
-    }
-
-    private EventsPanelViewModel eventsPanel;
-    private EventsPanelViewModel EventsPanel
-    {
-        get => eventsPanel;
-        set => this.RaiseAndSetIfChanged(ref eventsPanel, value);
-    }
-
-    private ConnectionStatusViewModel connectionStatus;
-    private ConnectionStatusViewModel ConnectionStatus
-    {
-        get => connectionStatus;
-        set => this.RaiseAndSetIfChanged(ref connectionStatus, value);
     }
 
     private bool undoEnabled = false;

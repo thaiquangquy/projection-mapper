@@ -25,10 +25,10 @@ namespace TeamSketch.Benchmarks
 
             for (int i = 0; i < LineSegmentsCount; i++)
             {
-                var x1 = _random.Next(0, Globals.CanvasWidth);
-                var y1 = _random.Next(0, Globals.CanvasHeight);
-                var x2 = _random.Next(0, Globals.CanvasWidth);
-                var y2 = _random.Next(0, Globals.CanvasHeight);
+                var x1 = _random.Next(0, (int) Globals.CanvasWidth);
+                var y1 = _random.Next(0, (int) Globals.CanvasHeight);
+                var x2 = _random.Next(0, (int) Globals.CanvasWidth);
+                var y2 = _random.Next(0, (int) Globals.CanvasHeight);
                 _renderer.EnqueueLineSegment(new Point(x1, y1), new Point(x2, y2));
             }
         }

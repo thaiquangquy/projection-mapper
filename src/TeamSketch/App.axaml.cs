@@ -20,19 +20,9 @@ public class App : Application
         {
             desktopLifetime.Startup += Startup;
 
-            //var window = new LobbyWindow
-            //{
-            //    DataContext = new LobbyViewModel(),
-            //    Topmost = true,
-            //    CanResize = false
-            //};
-            //window.Show();
-            //window.Activate();
-
-            SignalRService signalRService = new SignalRService(new AppState());
             var mainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(signalRService)
+                DataContext = new MainWindowViewModel()
             };
             mainWindow.Show();
             mainWindow.Activate();

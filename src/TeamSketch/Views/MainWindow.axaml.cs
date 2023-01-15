@@ -12,7 +12,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Microsoft.AspNetCore.SignalR.Client;
 using Splat;
 using TeamSketch.DependencyInjection;
 using TeamSketch.Models;
@@ -77,9 +76,6 @@ public partial class MainWindow : Window
     protected override void OnDataContextChanged(EventArgs e)
     {
         var vm = DataContext as MainWindowViewModel;
-        vm.SignalRService.Connection.On<string, byte[]>("DrewPoint", Connection_ParticipantDrewPoint);
-        vm.SignalRService.Connection.On<string, byte[]>("DrewLine", Connection_ParticipantDrewLine);
-        vm.SignalRService.Connection.Closed += Connection_Closed;
         vm.RequestClose += Vm_RequestClose;
         vm.RequestSave += Vm_RequestSave;
         vm.RequestNewFile += Vm_RequestNewFile;
@@ -128,7 +124,6 @@ public partial class MainWindow : Window
                 "Open file",
                 "Do you want to save the current file?",
                 MessageBox.Avalonia.Enums.ButtonEnum.YesNo);
-
             var result = await messageBoxStandardWindow.Show();
             if (result == MessageBox.Avalonia.Enums.ButtonResult.Yes)
             {
@@ -278,8 +273,6 @@ public partial class MainWindow : Window
             {
                 currentRangeDrawAction.endIndex = Math.Max(currentRangeDrawAction.endIndex, _renderer.GetLastItemIndex());
             }
-            //var vm = DataContext as MainWindowViewModel;
-            //_ = vm.SignalRService.DrawLineAsync(points);
         });
     }
 
@@ -340,11 +333,6 @@ public partial class MainWindow : Window
         {
             currentRangeDrawAction.endIndex = _renderer.GetLastItemIndex();
         }
-
-        var vm = DataContext as MainWindowViewModel;
-        _ = vm.SignalRService.DrawPointAsync(newPoint.X, newPoint.Y);
-
-        IndicateDrawing(_appState.Nickname);
     }
 
     private void Canvas_PointerMoved(object sender, PointerEventArgs e)
@@ -377,22 +365,6 @@ public partial class MainWindow : Window
             return Task.CompletedTask;
         }
 
-        closeAdditionalAction = () =>
-        {
-            var vm = DataContext as MainWindowViewModel;
-            if (vm.SignalRService.Connection.State == HubConnectionState.Disconnected)
-            {
-                var errorWindow = new ErrorWindow
-                {
-                    DataContext = new ErrorViewModel("You got disconnected :( Please check your internet connection or try again later.", true),
-                    Topmost = true,
-                    CanResize = false
-                };
-                errorWindow.Show();
-                errorWindow.Activate();
-            }
-        };
-
         Dispatcher.UIThread.InvokeAsync(Close);
 
         return Task.CompletedTask;
@@ -410,22 +382,5 @@ public partial class MainWindow : Window
     protected override void OnClosing(CancelEventArgs e)
     {
         isClosing = true;
-
-        //var vm = DataContext as MainWindowViewModel;
-        //if (vm.SignalRService.Connection.State == HubConnectionState.Connected)
-        //{
-        //    _ = vm.SignalRService.Connection.StopAsync();
-        //}
-        //_ = vm.SignalRService.Connection.DisposeAsync();
-
-        //var window = new LobbyWindow
-        //{
-        //    DataContext = new LobbyViewModel(true),
-        //    Topmost = true,
-        //    CanResize = false
-        //};
-        //window.Show();
-
-        //closeAdditionalAction();
     }
 }
