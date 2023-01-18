@@ -7,7 +7,7 @@
     </Application.DataTemplates>
 
 	<Application.Resources>
-		<FontFamily x:Key="MainFontFamily">resm:TeamSketch.Assets.Fonts?assembly=TeamSketch#Red Hat Display</FontFamily>
+		<FontFamily x:Key="MainFontFamily">resm:ProjectionMapper.Assets.Fonts?assembly=TeamSketch#Red Hat Display</FontFamily>
 		<SolidColorBrush x:Key="PrimaryColor">#2181ff</SolidColorBrush>
 		<SolidColorBrush x:Key="PrimaryColorLight">#3191ff</SolidColorBrush>
 
@@ -23,7 +23,7 @@
 
     <Application.Styles>
         <FluentTheme Mode="Light"/>
-		<StyleInclude Source="avares://TeamSketch/Assets/Icons.axaml" />
+		<StyleInclude Source="avares://ProjectionMapper/Assets/Icons.axaml" />
 
 		<Style Selector="TextBox">
 			<Setter Property="CornerRadius" Value="5" />

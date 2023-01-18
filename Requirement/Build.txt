@@ -1,1 +1,13 @@
 dotnet publish "TeamSketch.csproj" -c release -f net7.0 -r linux-x64  -p:Version=1.0.0.0 --self-contained true
+
+dotnet publish "ProjectionMapper.csproj" -c Release --runtime linux-x64 --self-contained --output ./dist/linux-x64
+
+dotnet publish "ProjectionMapper.csproj" -c Release --runtime linux-x64 -p:PublishReadyToRun=true -p:PublishSingleFile=true --self-contained --output ./dist/linux-x64
+
+dotnet publish "ProjectionMapper.csproj" -c Release --runtime win-x64 -p:PublishReadyToRun=true -p:PublishSingleFile=true --self-contained --output ./dist/win-x64
+
+https://github.com/AvaloniaUI/Avalonia/issues/5125
+
+https://superuser.com/questions/76148/automatically-install-a-desktop-launcher-for-an-ubuntu-deb-package
+
+https://stackoverflow.com/questions/119031/how-to-set-my-applications-desktop-icon-for-linux-kde-gnome-etc

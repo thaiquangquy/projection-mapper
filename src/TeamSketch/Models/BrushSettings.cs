@@ -32,32 +32,12 @@ public class BrushSettings
         { ThicknessEnum.Thick, 10 },
         { ThicknessEnum.Eraser, 50 }
     };
-    private readonly string _cursorsPath;
-    private readonly Dictionary<ColorsEnum, string> _cursorBrushPathLookup;
     private readonly IAssetLoader assetLoader;
 
     /// <param name="cursorsPath">Required parameter. Use empty string for unit testing.</param>
     /// <exception cref="ArgumentException"></exception>
-    public BrushSettings(string cursorsPath)
+    public BrushSettings()
     {
-        _cursorsPath = cursorsPath ?? throw new ArgumentException("Argument required.", nameof(cursorsPath));
-
-        if (_cursorsPath != string.Empty)
-        {
-            _cursorBrushPathLookup = new()
-            {
-                { ColorsEnum.Default, $"{_cursorsPath}/brush-black.png" },
-                { ColorsEnum.Red, $"{_cursorsPath}/brush-red.png" },
-                { ColorsEnum.Blue, $"{_cursorsPath}/brush-blue.png" },
-                { ColorsEnum.Green, $"{_cursorsPath}/brush-green.png" },
-                { ColorsEnum.Yellow, $"{_cursorsPath}/brush-yellow.png" },
-                { ColorsEnum.Orange, $"{_cursorsPath}/brush-orange.png" },
-                { ColorsEnum.Purple, $"{_cursorsPath}/brush-purple.png" },
-                { ColorsEnum.Pink, $"{_cursorsPath}/brush-pink.png" },
-                { ColorsEnum.Gray, $"{_cursorsPath}/brush-gray.png" }
-            };
-        }
-
         assetLoader = AvaloniaLocator.Current.GetService<IAssetLoader>();
 
         BrushColor = ColorsEnum.Default;
@@ -76,23 +56,6 @@ public class BrushSettings
         {
             brushColor = value;
             ColorBrush = ColorLookup[value];
-
-            if (string.IsNullOrEmpty(_cursorsPath))
-            {
-                // Setting cursor image is unnecessary when running benchmarks
-                return;
-            }
-
-            if (value == ColorsEnum.Eraser)
-            {
-                var path = $"{_cursorsPath}/eraser-{Thickness}.png";
-                Cursor = new(new Bitmap(assetLoader.Open(new Uri(path))), new PixelPoint((int)HalfThickness, (int)HalfThickness));
-            }
-            else
-            {
-                var path = _cursorBrushPathLookup[value];
-                Cursor = new(new Bitmap(assetLoader.Open(new Uri(path))), new PixelPoint(0, 0));
-            }
 
             BrushChanged?.Invoke(null, new BrushChangedEventArgs(Cursor));
         }
@@ -113,12 +76,6 @@ public class BrushSettings
             MaxBrushPointX = Globals.CanvasWidth - HalfThickness;
             MaxBrushPointY = Globals.CanvasHeight - HalfThickness;
             MinBrushPoint = HalfThickness;
-
-            if (brushColor == ColorsEnum.Eraser)
-            {
-                var path = $"{_cursorsPath}/eraser-{Thickness}.png";
-                Cursor = new(new Bitmap(assetLoader.Open(new Uri(path))), new PixelPoint((int)HalfThickness, (int)HalfThickness));
-            }
 
             BrushChanged?.Invoke(null, new BrushChangedEventArgs(Cursor));
         }

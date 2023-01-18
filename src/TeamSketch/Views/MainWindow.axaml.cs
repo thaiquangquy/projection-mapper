@@ -33,8 +33,6 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _lineRenderingTimer = new();
     private Point currentPoint = new();
     private bool pressed;
-    private Action closeAdditionalAction = () => { };
-    private bool isClosing;
 
     private Stack<RangeAction> undoRangeActionsStack;
     private Stack<RangeAction> redoRangeActionsStack;
@@ -60,7 +58,6 @@ public partial class MainWindow : Window
         _appState.BrushSettings.BrushChanged += BrushSettings_BrushChanged;
         this.Opened += MainWindow_Opened;
 
-        //canvas.Cursor = _appState.BrushSettings.Cursor;
         canvas.PointerMoved += Canvas_PointerMoved;
 
         undoRangeActionsStack = new Stack<RangeAction> { };
@@ -118,7 +115,7 @@ public partial class MainWindow : Window
 
     private async void Vm_RequestOpenFile()
     {
-        if (_renderer.GetLastItemIndex() > 0)
+        if (_renderer.GetLastItemIndex() > 0 && DataContext != null && (DataContext as MainWindowViewModel).SaveEnabled)
         {
             var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(
                 "Open file",
@@ -152,9 +149,7 @@ public partial class MainWindow : Window
             Reset();
 
             string imageFileName = imageFileNames[0];
-            Bitmap bitmap = new Bitmap(imageFileName);
-            //canvas.Background = new ImageBrush(new Bitmap(imageFileName));
-            canvas.Background = new ImageBrush(bitmap);
+            canvas.Background = new ImageBrush(new Bitmap(imageFileName));
         }
 
         if (PropertiesSaveContextMenu.IsOpen)
@@ -165,7 +160,7 @@ public partial class MainWindow : Window
 
     private async void Vm_RequestNewFile()
     {
-        if (_renderer.GetLastItemIndex() > 0)
+        if (_renderer.GetLastItemIndex() > 0 && DataContext != null && (DataContext as MainWindowViewModel).SaveEnabled)
         {
             var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(
                 "Creating new file",
@@ -189,9 +184,9 @@ public partial class MainWindow : Window
         ImageFileName = string.Empty;
     }
 
-    private void Vm_RequestSave(bool saveAs)
+    private async void Vm_RequestSave(bool saveAs)
     {
-        SaveImage(saveAs);
+        await SaveImage(saveAs);
     }
 
     private async Task SaveImage(bool saveAs)
@@ -227,12 +222,15 @@ public partial class MainWindow : Window
             RenderTargetBitmap rtb = new RenderTargetBitmap(PixelSize.FromSizeWithDpi(new Size(canvas.Width, canvas.Height), 96));
             rtb.Render(canvas);
             rtb.Save(ImageFileName);
+
+            var vm = DataContext as MainWindowViewModel;
+            vm.SaveEnabled = false;
         }
     }
 
     private async void Vm_RequestClose()
     {
-        if (_renderer.GetLastItemIndex() > 0)
+        if (_renderer.GetLastItemIndex() > 0 && DataContext != null && (DataContext as MainWindowViewModel).SaveEnabled)
         {
             var messageBoxStandardWindow = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(
                 "Creating new file",
@@ -281,30 +279,6 @@ public partial class MainWindow : Window
         canvas.Cursor = e.Cursor;
     }
 
-    private void Connection_ParticipantDrewPoint(string participant, byte[] data)
-    {
-        var point = PayloadConverter.ToPoint(data);
-
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            canvas.Children.Add(point);
-        });
-
-        IndicateDrawing(participant);
-    }
-
-    private void Connection_ParticipantDrewLine(string participant, byte[] data)
-    {
-        var (points, thickness, colorBrush) = PayloadConverter.ToLine(data);
-
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            _renderer.RenderLine(points, thickness, colorBrush);
-        });
-
-        IndicateDrawing(participant);
-    }
-
     private void Canvas_PointerPressed(object sender, PointerPressedEventArgs e)
     {
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
@@ -315,11 +289,6 @@ public partial class MainWindow : Window
             currentRangeDrawAction = new RangeAction();
             currentRangeDrawAction.startIndex = _renderer.GetLastItemIndex();
         }
-        else if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
-        {
-            //PropertiesSaveContextMenu.Open(null);
-        }
-
     }
 
     private void Canvas_PointerReleased(object sender, PointerReleasedEventArgs e)
@@ -337,6 +306,14 @@ public partial class MainWindow : Window
 
     private void Canvas_PointerMoved(object sender, PointerEventArgs e)
     {
+        //Point cusorPointOnCanvas = _renderer.RestrictPointToCanvas(e.GetPosition(canvas).X, e.GetPosition(canvas).Y);
+
+        Point cusorPointOnCanvas = e.GetPosition(canvasGrid);
+        VerticalLine.StartPoint = new Point(cusorPointOnCanvas.X, 0);
+        VerticalLine.EndPoint = new Point(cusorPointOnCanvas.X, Height);
+        HorizontalLine.StartPoint = new Point(0, cusorPointOnCanvas.Y);
+        HorizontalLine.EndPoint = new Point(Width, cusorPointOnCanvas.Y);
+
         if (!pressed)
         {
             return;
@@ -348,26 +325,6 @@ public partial class MainWindow : Window
         _renderer.EnqueueLineSegment(currentPoint, newPoint);
 
         currentPoint = newPoint;
-
-        IndicateDrawing(_appState.Nickname);
-    }
-
-    private void IndicateDrawing(string nickname)
-    {
-        //var vm = DataContext as MainWindowViewModel;
-        //vm.IndicateDrawing(nickname);
-    }
-
-    private Task Connection_Closed(Exception arg)
-    {
-        if (isClosing)
-        {
-            return Task.CompletedTask;
-        }
-
-        Dispatcher.UIThread.InvokeAsync(Close);
-
-        return Task.CompletedTask;
     }
 
     protected override void OnInitialized()
@@ -377,10 +334,5 @@ public partial class MainWindow : Window
         this.Height = screen.Bounds.Height;
         this.Position = new PixelPoint(0, 0);
         base.OnInitialized();
-    }
-
-    protected override void OnClosing(CancelEventArgs e)
-    {
-        isClosing = true;
     }
 }

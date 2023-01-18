@@ -30,7 +30,6 @@ public class MainWindowViewModel : ViewModelBase
     public event Action RequestOpenFile;
     public event Action RequestClose;
     public event Action<bool> RequestSave;
-    private string ImageFileName;
 
     public MainWindowViewModel()
     {
@@ -59,7 +58,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         RequestOpenFile();
     }
-    public async void Save()
+    public void Save()
     {
         RequestSave(false);
     }

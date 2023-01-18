@@ -31,77 +31,18 @@
 		<Style Selector="Canvas:disabled">
 			<Setter Property="Opacity" Value="0.4" />
 		</Style>
-
-		<Style Selector="Border.panelLabel">
-			<Setter Property="Margin" Value="0 0 0 10" />
-		</Style>
-		<Style Selector="Border.panelLabel TextBlock">
-			<Setter Property="FontSize" Value="16" />
-		</Style>
-
-		<Style Selector="Border.toolsPanel">
-			<Setter Property="Background" Value="#eee" />
-			<Setter Property="Padding" Value="15 15 15 20" />
-		</Style>
-		
-		<Style Selector="Border.participantsPanel">
-			<Setter Property="Background" Value="#ddd" />
-			<Setter Property="Padding" Value="10" />
-			<Setter Property="VerticalAlignment" Value="Stretch" />
-		</Style>
-		
-		<Style Selector="Border.eventsPanel">
-			<Setter Property="Background" Value="#eee" />
-			<Setter Property="Padding" Value="10" />
-			<Setter Property="VerticalAlignment" Value="Stretch" />
-		</Style>
-
-		<Style Selector="Border.footer">
-			<Setter Property="Background" Value="#ddd" />
-			<Setter Property="Padding" Value="15 0" />
-		</Style>
-		<Style Selector="Border.roomNameSection">
-			<Setter Property="Height" Value="37" />
-			<Setter Property="Background" Value="#fff" />
-			<Setter Property="CornerRadius" Value="5" />
-			<Setter Property="Padding" Value="10 0 5 0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-		</Style>
-		<Style Selector="Border.roomNameSection TextBlock">
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="Foreground" Value="#888" />
-		</Style>
-		<Style Selector="Border.roomNameSection TextBlock.roomName">
-			<Setter Property="Foreground" Value="{StaticResource GreenColor}" />
-			<Setter Property="FontWeight" Value="Medium" />
-		</Style>
-		<Style Selector="Border.roomNameSection Button">
-			<Setter Property="Background" Value="#ccc" />
-			<Setter Property="Padding" Value="10 3" />
-			<Setter Property="Margin" Value="12 0 0 0" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="Foreground" Value="#fff" />
-			<Setter Property="FontSize" Value="14" />
-		</Style>
-		<Style Selector="Border.roomNameSection Button:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="#bbb" />
-			<Setter Property="TextBlock.Foreground" Value="#fff" />
-		</Style>
 	</Window.Styles>
 
 	<Grid RowDefinitions="*">
-		<Grid Grid.Row="0" ColumnDefinitions="*">
+		<Grid
+      Name="canvasGrid"
+      Grid.Row="0" ColumnDefinitions="*">
       <Border Name="containerBorder" Grid.Column="0" Classes="canvasContainer">
         <Canvas
           Name="canvas"
           DataContext="{Binding Path=ConnectionStatus}"
           PointerPressed="Canvas_PointerPressed"
           PointerReleased="Canvas_PointerReleased"/>
-        <!--<Line
-          x:Name="VerticalLine" Width="1" Height="{Binding ElementName=canvas, Path=Height}"
-          Stroke="Gray"/>-->
-        <!--<Path x:Name="HorizontalLine" Height="1" Width="{Binding ElementName=canvas, Path=Width}"/>-->
-        <!--<Path Name="HorizontalLine" Height="1" Width="1028"/>-->
         <Border.ContextMenu>
           <ContextMenu
             Name="PropertiesSaveContextMenu"
@@ -151,9 +92,15 @@
         </Border.ContextMenu>
       </Border>
       <Line
-          x:Name="VerticalLine" Width="1" Height="{Binding ElementName=canvas, Path=Height}"
-          Stroke="Gray"/>
-      <Path x:Name="HorizontalLine" Height="1" Width="{Binding ElementName=canvas, Path=Width}"/>
+          x:Name="VerticalLine"
+          StrokeThickness="1"
+          Stroke="Gray"
+          IsEnabled="False"/>
+      <Line
+				x:Name="HorizontalLine"
+        StrokeThickness="1"
+				Stroke="Gray"
+        IsEnabled="False"/>
 		</Grid>
 	</Grid>
 
