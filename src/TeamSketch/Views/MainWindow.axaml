@@ -40,7 +40,8 @@
       <Border Name="containerBorder" Grid.Column="0" Classes="canvasContainer">
         <Canvas
           Name="canvas"
-          DataContext="{Binding Path=ConnectionStatus}"
+          VerticalAlignment="Top"
+          HorizontalAlignment="Left"
           PointerPressed="Canvas_PointerPressed"
           PointerReleased="Canvas_PointerReleased"/>
         <Border.ContextMenu>

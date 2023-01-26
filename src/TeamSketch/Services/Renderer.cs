@@ -10,6 +10,18 @@ using TeamSketch.Views;
 
 namespace TeamSketch.Services;
 
+public class RedererDrawAction
+{
+    public List<Ellipse> pointList;
+    public List<Path> pathList;
+
+    public RedererDrawAction()
+    {
+        pointList = new List<Ellipse>();
+        pathList = new List<Path>();
+    }
+}
+
 public interface IRenderer
 {
     void DrawPoint(double x, double y);
@@ -57,18 +69,6 @@ public class Renderer : IRenderer
     private readonly Stack<RedererDrawAction> _undoStack = new();
     private readonly Stack<IEnumerable<IControl>> _redoStack = new();
     private readonly DropOutStack<IEnumerable<IControl>> _redoDropOutStack = new(50);
-
-    public class RedererDrawAction
-    {
-        public List<Ellipse> pointList;
-        public List<Path> pathList;
-
-        public RedererDrawAction()
-        {
-            pointList = new List<Ellipse>();
-            pathList = new List<Path>();
-        }
-    }
 
     public Renderer(BrushSettings brushSettings, Canvas canvas)
     {
