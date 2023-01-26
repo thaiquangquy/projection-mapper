@@ -33,76 +33,82 @@
 		</Style>
 	</Window.Styles>
 
-	<Grid RowDefinitions="*">
-		<Grid
-      Name="canvasGrid"
-      Grid.Row="0" ColumnDefinitions="*">
-      <Border Name="containerBorder" Grid.Column="0" Classes="canvasContainer">
-        <Canvas
-          Name="canvas"
-          VerticalAlignment="Top"
-          HorizontalAlignment="Left"
-          PointerPressed="Canvas_PointerPressed"
-          PointerReleased="Canvas_PointerReleased"/>
-        <Border.ContextMenu>
-          <ContextMenu
-            Name="PropertiesSaveContextMenu"
-            PlacementMode="Pointer"
-            IsEnabled="True">
-            <MenuItem
-              Header="Undo			Ctrl+Z"
-              HotKey="Ctrl+Z"
-              Command="{Binding UndoCommand}"
-              IsEnabled="{Binding UndoEnabled}">
-            </MenuItem>
-            <MenuItem
-							Header="Redo			Ctrl+Y"
-              HotKey="Ctrl+Y"
-              Command="{Binding RedoCommand}"
-              IsEnabled="{Binding RedoEnabled}">
-            </MenuItem>
-            <Separator/>
-            <MenuItem
-              Header="New			Ctrl+N"
-              HotKey="Ctrl+N"
-              Command="{Binding NewCommand}">
-            </MenuItem>
-            <MenuItem
-              Header="Open			Ctrl+O"
-              HotKey="Ctrl+O"
-              Command="{Binding OpenCommand}">
-            </MenuItem>
-            <MenuItem
-              Header="Save			Ctrl+S"
-              HotKey="Ctrl+S"
-              Command="{Binding SaveCommand}"
-              IsEnabled="{Binding SaveEnabled}">
-            </MenuItem>
-            <MenuItem
-              Header="Save As..."
-              Command="{Binding SaveAsCommand}"
-              IsEnabled="{Binding SaveAsEnabled}">
-            </MenuItem>
-            <Separator/>
-            <MenuItem
-              Header="Quit			Alt+F4"
-              HotKey="Alt+F4"
-              Command="{Binding QuitCommand}">
-            </MenuItem>
-          </ContextMenu>
-        </Border.ContextMenu>
-      </Border>
-      <Line
-          x:Name="VerticalLine"
-          StrokeThickness="1"
-          Stroke="Gray"
-          IsEnabled="False"/>
-      <Line
-				x:Name="HorizontalLine"
+	<Grid
+    Name="mainGrid"
+    Margin="0"
+    VerticalAlignment="Center"
+    HorizontalAlignment="Center"
+    RowDefinitions="*"
+    ClipToBounds="True">
+    <Viewbox
+      Grid.ColumnSpan="2"
+      Grid.RowSpan="2"
+      Name="canvasViewbox"
+      Stretch="Uniform"
+      StretchDirection="Both">
+      <Canvas
+        Name="canvas"
+        ClipToBounds="True"
+        PointerPressed="Canvas_PointerPressed"
+        PointerReleased="Canvas_PointerReleased"/>
+    </Viewbox>
+    <Grid.ContextMenu>
+      <ContextMenu
+        Name="PropertiesSaveContextMenu"
+        PlacementMode="Pointer"
+        IsEnabled="True">
+        <MenuItem
+          Header="Undo			Ctrl+Z"
+          HotKey="Ctrl+Z"
+          Command="{Binding UndoCommand}"
+          IsEnabled="{Binding UndoEnabled}">
+        </MenuItem>
+        <MenuItem
+          Header="Redo			Ctrl+Y"
+          HotKey="Ctrl+Y"
+          Command="{Binding RedoCommand}"
+          IsEnabled="{Binding RedoEnabled}">
+        </MenuItem>
+        <Separator/>
+        <MenuItem
+          Header="New			Ctrl+N"
+          HotKey="Ctrl+N"
+          Command="{Binding NewCommand}">
+        </MenuItem>
+        <MenuItem
+          Header="Open			Ctrl+O"
+          HotKey="Ctrl+O"
+          Command="{Binding OpenCommand}">
+        </MenuItem>
+        <MenuItem
+          Header="Save			Ctrl+S"
+          HotKey="Ctrl+S"
+          Command="{Binding SaveCommand}"
+          IsEnabled="{Binding SaveEnabled}">
+        </MenuItem>
+        <MenuItem
+          Header="Save As..."
+          Command="{Binding SaveAsCommand}"
+          IsEnabled="{Binding SaveAsEnabled}">
+        </MenuItem>
+        <Separator/>
+        <MenuItem
+          Header="Quit			Alt+F4"
+          HotKey="Alt+F4"
+          Command="{Binding QuitCommand}">
+        </MenuItem>
+      </ContextMenu>
+    </Grid.ContextMenu>
+    <Line
+        x:Name="VerticalLine"
         StrokeThickness="1"
-				Stroke="Gray"
+        Stroke="Gray"
         IsEnabled="False"/>
-		</Grid>
+    <Line
+      x:Name="HorizontalLine"
+      StrokeThickness="1"
+      Stroke="Gray"
+      IsEnabled="False"/>
 	</Grid>
 
 </Window>
