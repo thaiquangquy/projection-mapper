@@ -6,3 +6,7 @@ dotnet publish "ProjectionMapper.csproj" -c Release --runtime linux-arm64 -p:Pub
 dotnet publish "ProjectionMapper.csproj" -c Release --runtime win-x64 -p:PublishReadyToRun=true -p:PublishSingleFile=true --self-contained --output ./dist/win-x64
 
 https://fedingo.com/how-to-build-deb-package-in-ubuntu-debian-linux/
+
+cp -R /mnt/d/repo/team-sketch/linux_deb_package/projectionmapper_1.0-5_linux64/ /home/quy/deb_package/
+chmod -R 775 projectionmapper_1.0-5_arm64/
+dpkg-deb -Zgzip --build projectionmapper_1.0-5_arm64/
